@@ -1,5 +1,6 @@
 package com.example.kunal.springproject.Entity;
 
+import com.example.kunal.springproject.Exception.InvalidFormatEmailException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,27 +34,27 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Customer {
 
-    @Override
-    public int hashCode() {
-        int result = 17;
-//        System.out.println(email.hashCode());
-        if (email != null) {
-            result = 31 * result + email.hashCode(); // email hashcode the same, if email is the same
-        }
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (!(o instanceof Customer)) {
-            return false;
-        }
-        Customer customer = (Customer) o;
-        return this.getEmail() == customer.getEmail();
-    }
+//    @Override
+//    public int hashCode() {
+//        int result = 17;
+////        System.out.println(email.hashCode());
+//        if (email != null) {
+//            result = 31 * result + email.hashCode(); // email hashcode the same, if email is the same
+//        }
+//        return result;
+//    }
+//
+//    @Override
+//    public boolean equals(Object o) {
+//        if (o == this) {
+//            return true;
+//        }
+//        if (!(o instanceof Customer)) {
+//            return false;
+//        }
+//        Customer customer = (Customer) o;
+//        return this.getEmail() == customer.getEmail();
+//    }
 
     @javax.persistence.Id @GeneratedValue
     @JsonIgnore

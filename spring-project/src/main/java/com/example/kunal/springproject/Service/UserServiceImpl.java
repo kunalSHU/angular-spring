@@ -2,6 +2,7 @@ package com.example.kunal.springproject.Service;
 
 import com.example.kunal.springproject.Entity.Customer;
 import com.example.kunal.springproject.Exception.EmptyEmailException;
+import com.example.kunal.springproject.Exception.InvalidFormatEmailException;
 import com.example.kunal.springproject.Exception.ResourceNotFoundException;
 import com.example.kunal.springproject.Repository.UserRepository;
 import com.example.kunal.springproject.Utils.PasswordEncDec;
@@ -37,11 +38,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Customer createUser(Customer user){
         System.out.println("checking to see contains T/F");
-
+        log.info("User object {} ", user);
+        log.info("User email {} ", user.getEmail());
         if (user.getEmail().isEmpty()) {
             throw new EmptyEmailException("Email cannot be empty");
+        } if (!user.getEmail().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new InvalidFormatEmailException("Invalid email format");
         }
-
         //encrypting password before saving
         user.setPassword(PasswordEncDec.encrypt(user.getPassword()));
         Customer usr = this.userRepository.save(user);
