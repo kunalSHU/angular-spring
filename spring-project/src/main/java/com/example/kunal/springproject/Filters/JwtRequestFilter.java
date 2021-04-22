@@ -31,18 +31,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse
             ,FilterChain filterChain) throws ServletException, IOException {
 
-        log.info("internal filter");
+        log.info("Internal filter");
 
         final String authHeader = httpServletRequest.getHeader("Authorization");
 
         String jwt = null;
         String username = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            log.info("In bearer if statement");
             jwt = authHeader.substring(7);
+            log.info("The jwt {}", jwt);
             username = jwtUtil.extractUsername(jwt);
+            log.info("Username extracted {} ", username);
         }
 
+        log.info("SecurityContextHolder.getContext().getAuthentication() {} ",
+                SecurityContextHolder.getContext().getAuthentication());
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            log.info("In the second if block");
             UserDetails userDetails = this.userService.loadUserByUsername(username);
             if (jwtUtil.validateToken(jwt, userDetails)) {
                 // default behaviour of UsernamePasswordAuthenticationFilter, we are overriding the functionality

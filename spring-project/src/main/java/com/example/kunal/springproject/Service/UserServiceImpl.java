@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -51,8 +52,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return usr;
     }
 
+
+    class Hey {
+        public double square(Double num) {
+            return Math.pow(num, 2);
+        }
+    }
+
+
     @Override
     public Customer updateUser(Customer user) {
+
+
+        Function<Double, Double> result = (Double x) -> x * x;
+        result.apply(5.0);
+
         Optional<Customer> userDb = this.userRepository.findById(user.getId());
         // update the user since it is in the db
         if(userDb.isPresent()){
@@ -103,16 +117,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-
+        log.info("In load by user name function");
         if(this.userRepository.findAll().stream().anyMatch(customer -> customer.getEmail().equals(email))) {
             List<Customer> c = this.userRepository.findAll().stream()
                     .filter(customer -> customer.getEmail().equals(email)).collect(Collectors.toList());
-            final String password  = c.get(0).getPassword();
+            final String password = c.get(0).getPassword();
 
             // if that email and password exists in the db, then I should be authenticated
             return new User(email, password, new ArrayList<>());
         }
-
         return null;
     }
 

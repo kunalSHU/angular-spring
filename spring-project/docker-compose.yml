@@ -6,16 +6,16 @@ services:
     build: ./
     ports:
       - "8080:8080"
-    depends_on:
-      - postgresqldb
+#    depends_on:
+#      - postgresqldb
     restart: always
     volumes:
       - .:/usr/src/app
-  postgresqldb:
-    image: postgres
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_PASSWORD=jhvjv
-      - POSTGRES_USER=kunal
-      - POSTGRES_DB=userdb
+#  postgresqldb:
+#    image: postgres
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_PASSWORD=jhvjv
+#      - POSTGRES_USER=kunal
+#      - POSTGRES_DB=userdb

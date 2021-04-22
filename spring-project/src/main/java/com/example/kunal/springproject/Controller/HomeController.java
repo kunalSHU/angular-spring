@@ -8,9 +8,12 @@ import com.example.kunal.springproject.Service.UserServiceImpl;
 import com.example.kunal.springproject.Utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +24,7 @@ import org.springframework.util.SerializationUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,6 +64,11 @@ public class HomeController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @GetMapping("/name")
+    public ResponseEntity<String> getName() {
+        return ResponseEntity.ok("Kunal Shukla");
+    }
+
     @GetMapping("/users")
     public ResponseEntity<List<Customer>> getAllUsers() {
         System.out.println(this.userService.getAllUser());
@@ -75,17 +84,23 @@ public class HomeController {
         return ResponseEntity.ok(this.userService.getUserById(id));
     }
 
+    @GetMapping("/principal")
+    public ResponseEntity<String> getPrincipal(Principal principal) {
+        return ResponseEntity.ok(principal.toString());
+    }
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticateUser(@RequestBody AuthenticationRequest authReq) throws Exception {
 
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken
-                    (authReq.getUsername(), authReq.getPassword()));
+                    (authReq.getEmail(), authReq.getPassword()));
         } catch (BadCredentialsException e) {
             throw new Exception("Incorrect username/password", e);
         }
 
-        final UserDetails userDetails = userServiceImpl.loadUserByUsername(authReq.getUsername());
+        final UserDetails userDetails = userServiceImpl.loadUserByUsername(authReq
+                .getEmail());
 
         log.info("User details {} ", userDetails);
 

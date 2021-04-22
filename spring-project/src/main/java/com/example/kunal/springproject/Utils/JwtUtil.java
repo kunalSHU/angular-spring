@@ -25,6 +25,8 @@ public class JwtUtil {
     private int milliSeconds;
 
     private Claims extractAllClaims(String token) {
+
+        log.info("Extract all claims output {} ", Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token));
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     }
 
@@ -42,6 +44,11 @@ public class JwtUtil {
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claim = extractAllClaims(token);
+
+        Function<Claims, String> function = (Claims claim1) -> claim1.getSubject();
+        log.info("Function .apply claims {}",function.apply(claim));
+
+        log.info("Claim Resolver apply claim {}", claimsResolver.apply(claim));
         return claimsResolver.apply(claim);
     }
 
@@ -63,4 +70,5 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, jwtSecret).compact();
 
     }
+
 }
